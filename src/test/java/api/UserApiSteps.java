@@ -20,6 +20,20 @@ public class UserApiSteps {
                 .post("/api/auth/login");
     }
 
+    @Step("API Запрос: Регистрация нового пользователя")
+    public Response createUser(String name, String email, String password) {
+        // Создаем тело запроса. Для этого используем класс моделей или обычный анонимный объект/мапу
+        java.util.Map<String, String> userBody = new java.util.HashMap<>();
+        userBody.put("name", name);
+        userBody.put("email", email);
+        userBody.put("password", password);
+
+        return RestAssured.given()
+                .header("Content-Type", "application/json")
+                .body(userBody)
+                .post("/api/auth/register");
+    }
+
     @Step("API Запрос: Удаление профиля пользователя")
     public Response deleteUser(String accessToken) {
         return RestAssured.given()

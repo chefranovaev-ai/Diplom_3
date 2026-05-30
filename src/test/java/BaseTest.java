@@ -1,3 +1,4 @@
+import api.UserApiHelper;
 import config.AppConfig;
 import api.UserApiSteps;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -13,12 +14,14 @@ public class BaseTest {
     protected WebDriver driver;
     protected String fakeName;
     protected String fakeEmail;
-    protected final String FAKE_PASSWORD = "securePassword123";
+    protected  String fakePassword;
 
     @Before
     public void setUp() {
-        fakeName = "CleanCodeTester";
-        fakeEmail = "test_" + UUID.randomUUID().toString().substring(0, 5) + "@yandex.ru";
+        String uniqueId = UUID.randomUUID().toString().substring(0, 8);
+        fakeName = "User_" + uniqueId;
+        fakeEmail = "burger_test_" + uniqueId + "@yandex.ru";
+        fakePassword = "pass_" + uniqueId;
 
         String browser = System.getProperty("browser", "chrome");
         if ("chrome".equalsIgnoreCase(browser)) {
@@ -43,8 +46,8 @@ public class BaseTest {
             driver.quit();
         }
 
-        UserApiSteps apiSteps = new UserApiSteps();
-        apiSteps.deleteUserIfCreated(fakeEmail, FAKE_PASSWORD);
+        UserApiHelper apiHelper = new UserApiHelper();
+        apiHelper.deleteUserIfCreated(fakeEmail, fakePassword);
     }
 }
 

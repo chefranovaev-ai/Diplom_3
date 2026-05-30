@@ -16,12 +16,14 @@ public class LoginTest extends BaseTest {
     @Step("Вход по кнопке 'Войти в аккаунт' на главной")
     @Description("Авторизация с главной страницы с помощью основной кнопки")
     public void testLoginFromMainPageButton() {
+        new api.UserApiHelper().createUser(fakeName, fakeEmail, fakePassword);
+
         MainPage mainPage = new MainPage(driver);
         mainPage.openUrl(AppConfig.MAIN_PAGE_URL);
         mainPage.clickLoginBtn();
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(AppConfig.VALID_USER_EMAIL, AppConfig.VALID_USER_PASSWORD);
+        loginPage.login(fakeEmail, fakePassword);
         Assert.assertTrue("Вход не выполнен: кнопка 'Оформить заказ' не появилась",
                 mainPage.findElement(mainPage.ORDER_BTN).isDisplayed());
 
@@ -31,12 +33,14 @@ public class LoginTest extends BaseTest {
     @Step("Вход через кнопку 'Личный кабинет'")
     @Description("Авторизация при попытке неавторизованного пользователя войти в ЛК из хедера")
     public void testLoginFromPersonalProfileButton() {
+        new api.UserApiHelper().createUser(fakeName, fakeEmail, fakePassword);
+
         MainPage mainPage = new MainPage(driver);
         mainPage.openUrl(AppConfig.MAIN_PAGE_URL);
         mainPage.clickProfileBtn();
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(AppConfig.VALID_USER_EMAIL, AppConfig.VALID_USER_PASSWORD);
+        loginPage.login(fakeEmail, fakePassword);
         Assert.assertTrue("Вход не выполнен: кнопка 'Оформить заказ' не появилась",
                 mainPage.findElement(mainPage.ORDER_BTN).isDisplayed());
 
@@ -46,12 +50,14 @@ public class LoginTest extends BaseTest {
     @Step("Вход через кнопку в форме регистрации")
     @Description("Переход к авторизации по ссылке со страницы регистрации пользователя")
     public void testLoginFromRegisterForm() {
+        new api.UserApiHelper().createUser(fakeName, fakeEmail, fakePassword);
+
         RegisterPage registerPage = new RegisterPage(driver);
         registerPage.openUrl(AppConfig.REGISTER_PAGE_URL);
         registerPage.clickLoginLink();
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(AppConfig.VALID_USER_EMAIL, AppConfig.VALID_USER_PASSWORD);
+        loginPage.login(fakeEmail, fakePassword);
         MainPage mainPage = new MainPage(driver);
         Assert.assertTrue("Вход не выполнен: кнопка 'Оформить заказ' не появилась",
                 mainPage.findElement(mainPage.ORDER_BTN).isDisplayed());
@@ -62,12 +68,14 @@ public class LoginTest extends BaseTest {
     @Step("Вход через кнопку в форме восстановления пароля")
     @Description("Переход к авторизации по ссылке с формы forgot-password")
     public void testLoginFromForgotPasswordForm() {
+        new api.UserApiHelper().createUser(fakeName, fakeEmail, fakePassword);
+
         ForgotPasswordPage forgotPage = new ForgotPasswordPage(driver);
         forgotPage.openUrl(AppConfig.FORGOT_PASSWORD_PAGE_URL);
         forgotPage.clickLoginLink();
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.login(AppConfig.VALID_USER_EMAIL, AppConfig.VALID_USER_PASSWORD);
+        loginPage.login(fakeEmail, fakePassword);
         MainPage mainPage = new MainPage(driver);
         Assert.assertTrue("Вход не выполнен: кнопка 'Оформить заказ' не появилась",
                 mainPage.findElement(mainPage.ORDER_BTN).isDisplayed());

@@ -36,7 +36,7 @@ public class MainPage extends BasePage {
        WebElement tabElement = findElement(tabLocator);
 
        new Actions(driver)
-            .scrollToElement(tabElement) // Фирменный скролл Selenium 4
+            .scrollToElement(tabElement)
             .click(tabElement)
             .perform();
     }
