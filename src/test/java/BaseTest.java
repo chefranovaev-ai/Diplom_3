@@ -1,6 +1,5 @@
 import api.UserApiHelper;
 import config.AppConfig;
-import api.UserApiSteps;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.After;
 import org.junit.Before;

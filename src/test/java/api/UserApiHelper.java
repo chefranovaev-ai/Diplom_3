@@ -1,48 +1,57 @@
 package api;
 
-import com.google.gson.Gson;
 import config.AppConfig;
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import models.UserCredentials;
 import models.UserRegistrationModel;
 
 public class UserApiHelper {
-    private final Gson gson = new Gson();
 
     public UserApiHelper() {
+
         RestAssured.baseURI = AppConfig.BASE_URL;
     }
 
-    // Метод 1: Создание пользователя (3 поля через Gson)
+    @Step("API Запрос: Создание пользователя с именем: {name}, email: {email}")
     public Response createUser(String name, String email, String password) {
         UserRegistrationModel registrationData = new UserRegistrationModel(name, email, password);
-        String jsonBody = gson.toJson(registrationData); // Сериализация объекта в JSON-строку
 
         return RestAssured.given()
                 .header("Content-Type", "application/json")
-                .body(jsonBody)
+                .body(registrationData)
                 .post("/api/auth/register");
     }
+    @Step("API Запрос: Авторизация пользователя под email {credentials.email}")
+    public Response loginUser(UserCredentials credentials) {
+        return RestAssured.given()
+                .header("Content-Type", "application/json")
+                .body(credentials)
+                .post("/api/auth/login");
+    }
 
-    // Метод 2: Авторизация и удаление пользователя (2 поля через Gson)
+    @Step("API Запрос: Удаление профиля пользователя по токену")
+    public Response deleteUser(String accessToken) {
+        return RestAssured.given()
+                .header("Authorization", accessToken)
+                .delete("/api/auth/user");
+    }
+
+
+    @Step("API Запрос: Удаление пользователя (если он был создан) по email: {email}")
     public void deleteUserIfCreated(String email, String password) {
         try {
             UserCredentials credentials = new UserCredentials(email, password);
-            String jsonBody = gson.toJson(credentials); // Сериализация 2 полей для логина
 
-            Response loginResponse = RestAssured.given()
-                    .header("Content-Type", "application/json")
-                    .body(jsonBody)
-                    .post("/api/auth/login");
+            Response loginResponse = loginUser(credentials);
 
             if (loginResponse.getStatusCode() == 200) {
                 String accessToken = loginResponse.then().extract().path("accessToken");
                 if (accessToken != null && !accessToken.isEmpty()) {
-                    RestAssured.given()
-                            .header("Authorization", accessToken)
-                            .delete("/api/auth/user")
-                            .then().statusCode(202);
+                    deleteUser(accessToken)
+                            .then()
+                            .statusCode(202);
                     System.out.println("Данные успешно зачищены через API Helper (Gson).");
                 }
             }

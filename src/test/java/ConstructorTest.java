@@ -2,7 +2,6 @@ import config.AppConfig;
 import io.qameta.allure.Description;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
-import io.qameta.allure.Story;
 import org.junit.Assert;
 import org.junit.Test;
 import pages.MainPage;
